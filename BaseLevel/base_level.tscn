@@ -1,0 +1,172 @@
+[gd_scene load_steps=20 format=3 uid="uid://cobpvfmo2ek6e"]
+
+[ext_resource type="MeshLibrary" uid="uid://bkctqvmk2nnwx" path="res://MeshLibraries/SpaceLibrary.tres" id="1_brslr"]
+[ext_resource type="PackedScene" uid="uid://q4nh8xt3vw7k" path="res://RayPickerCamera/ray_picker_camera.tscn" id="1_unio4"]
+[ext_resource type="PackedScene" uid="uid://ft75lebfvdh0" path="res://Enemy/enemy.tscn" id="2_7tx4d"]
+[ext_resource type="PackedScene" uid="uid://clkm3bqaflhgo" path="res://Base/base.tscn" id="3_5hpag"]
+[ext_resource type="Script" path="res://BaseLevel/EnemyPathGD.gd" id="3_bkjxj"]
+[ext_resource type="Script" path="res://BaseLevel/TurretManager.gd" id="5_sl6rl"]
+[ext_resource type="PackedScene" uid="uid://dud4rqvt0phq0" path="res://Turrets/turret.tscn" id="6_x2ekm"]
+[ext_resource type="Script" path="res://BaseLevel/Bank.gd" id="8_w0je5"]
+[ext_resource type="PackedScene" uid="uid://0hebp0twj688" path="res://DifficultyManager/difficulty_manager.tscn" id="9_bc6st"]
+[ext_resource type="PackedScene" uid="uid://cdhnwwp6vl5qi" path="res://UserInterface/victory_layer.tscn" id="10_troqm"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_26wvy"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_3a4us"]
+sky_material = SubResource("ProceduralSkyMaterial_26wvy")
+
+[sub_resource type="Environment" id="Environment_i0dwy"]
+background_mode = 2
+sky = SubResource("Sky_3a4us")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ibcp"]
+albedo_color = Color(0.466667, 0.631373, 0.290196, 1)
+
+[sub_resource type="Curve3D" id="Curve3D_5noyr"]
+_data = {
+"points": PackedVector3Array(-0.1, 0, 0, 0, 0, 0, -25, 0, 6, -1, 0, 1, 1, 0, -1, 14, 0, 6, 1, 0, 1, -1, 0, -1, 14, 0, -2, 1, 0, 1, -1, 0, -1, -10, 0, -2, 0, 0, 0, 0, 0, 0, -10, 0, -10),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eow18"]
+albedo_color = Color(0.223529, 0.223529, 0.223529, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_iuxcv"]
+font_size = 64
+outline_size = 16
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Curve" id="Curve_70e6r"]
+min_value = 2.0
+max_value = 2.01
+_data = [Vector2(0, 2.01), 0.0, -0.00999999, 0, 1, Vector2(1, 2), -0.00999999, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_da533"]
+min_value = 10.0
+max_value = 150.0
+_data = [Vector2(0, 0), 0.0, 150.0, 0, 1, Vector2(1, 150), 150.0, 0.0, 1, 0]
+point_count = 2
+
+[node name="BaseLevel" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_i0dwy")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+size = Vector3(100, 2, 100)
+material = SubResource("StandardMaterial3D_4ibcp")
+
+[node name="RayPickerCamera" parent="." node_paths=PackedStringArray("gridmap", "turret_manager") instance=ExtResource("1_unio4")]
+gridmap = NodePath("../GridMap")
+turret_manager = NodePath("../TurretManager")
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("1_brslr")
+cell_size = Vector3(4, 4, 4)
+cell_center_y = false
+data = {
+"cells": PackedInt32Array(65532, 0, 0, 65533, 0, 0, 65534, 0, 1048579, 65535, 0, 0, 0, 0, 0, 1, 0, 1048579, 2, 0, 0, 65532, 65535, 0, 65532, 65534, 1048579, 65534, 65534, 0, 65535, 65534, 0, 4, 65535, 0, 3, 65534, 0, 2, 65534, 0, 1, 65534, 0, 0, 65534, 0, 4, 65534, 1048579, 4, 0, 0, 4, 1, 0, 65531, 65534, 0, 65531, 65535, 0, 65531, 0, 1048579, 65531, 2, 0, 65532, 2, 0, 65533, 2, 1048579, 65534, 2, 0, 65535, 2, 0, 0, 2, 0, 1, 2, 0, 2, 2, 0, 3, 2, 1048579, 4, 2, 0, 65530, 65535, 1048578, 65530, 0, 1048578, 65524, 65529, 1048578, 65524, 65530, 1048578, 65524, 65531, 1048578, 65524, 65532, 1048578, 65524, 65533, 1048578, 65524, 65534, 1048578, 65524, 65535, 1048578, 65524, 0, 1048578, 65525, 65529, 1048578, 65525, 65530, 1048578, 65525, 65531, 1048578, 65525, 65532, 1048578, 65525, 65533, 1048578, 65525, 65534, 1048578, 65525, 65535, 1048578, 65525, 0, 1048578, 65526, 65529, 1048578, 65526, 65530, 1048578, 65526, 65531, 1048578, 65526, 65532, 1048578, 65526, 65533, 1048578, 65526, 65534, 1048578, 65526, 65535, 1048578, 65526, 0, 1048578, 65527, 65529, 1048578, 65527, 65530, 1048578, 65527, 65531, 1048578, 65527, 65532, 1048578, 65527, 65533, 1048578, 65527, 65534, 1048578, 65527, 65535, 1048578, 65527, 0, 1048578, 65528, 65529, 1048578, 65528, 65530, 1048578, 65528, 65531, 1048578, 65528, 65532, 1048578, 65528, 65533, 1048578, 65528, 65534, 1048578, 65528, 65535, 1048578, 65528, 0, 1048578, 65529, 65529, 1048578, 65529, 65530, 1048578, 65529, 65531, 1048578, 65529, 65532, 1048578, 65529, 65533, 1048578, 65529, 65534, 1048578, 65529, 65535, 1048578, 65529, 0, 1048578, 65530, 65529, 1048578, 65530, 65530, 1048578, 65530, 65531, 1048578, 65530, 65532, 1048578, 65530, 65533, 1048578, 65530, 65534, 1048578, 65531, 65529, 1048578, 65531, 65530, 1048578, 65531, 65531, 1048578, 65531, 65532, 1048578, 65531, 65533, 1048578, 65532, 65529, 1048578, 65532, 65530, 1048578, 65532, 65531, 1048578, 65532, 65532, 1048578, 65532, 65533, 1048578, 65533, 65529, 1048578, 65533, 65530, 1048578, 65533, 65531, 1048578, 65533, 65532, 1048578, 65533, 65533, 1048578, 65534, 65529, 1048578, 65534, 65530, 1048578, 65534, 65531, 1048578, 65534, 65532, 1048578, 65534, 65533, 1048578, 65535, 65529, 1048578, 65535, 65530, 1048578, 65535, 65531, 1048578, 65535, 65532, 1048578, 65535, 65533, 1048578, 0, 65529, 1048578, 0, 65530, 1048578, 0, 65531, 1048578, 0, 65532, 1048578, 0, 65533, 1048578, 1, 65529, 1048578, 1, 65530, 1048578, 1, 65531, 1048578, 1, 65532, 1048578, 1, 65533, 1048578, 2, 65529, 1048578, 2, 65530, 1048578, 2, 65531, 1048578, 2, 65532, 1048578, 2, 65533, 1048578, 3, 65529, 1048578, 3, 65530, 1048578, 3, 65531, 1048578, 3, 65532, 1048578, 3, 65533, 1048578, 4, 65529, 1048578, 4, 65530, 1048578, 4, 65531, 1048578, 4, 65532, 1048578, 4, 65533, 1048578, 5, 65529, 1048578, 5, 65530, 1048578, 5, 65531, 1048578, 5, 65532, 1048578, 5, 65533, 1048578, 6, 65529, 1048578, 6, 65530, 1048578, 6, 65531, 1048578, 6, 65532, 1048578, 6, 65533, 1048578, 7, 65529, 1048578, 7, 65530, 1048578, 7, 65531, 1048578, 7, 65532, 1048578, 7, 65533, 1048578, 8, 65529, 1048578, 8, 65530, 1048578, 8, 65531, 1048578, 8, 65532, 1048578, 8, 65533, 1048578, 5, 65534, 1048578, 5, 65535, 1048578, 5, 0, 1048578, 5, 1, 1048578, 5, 2, 1048578, 6, 65534, 1048578, 6, 65535, 1048578, 6, 0, 1048578, 6, 1, 1048578, 6, 2, 1048578, 7, 65534, 1048578, 7, 65535, 1048578, 7, 0, 1048578, 7, 1, 1048578, 7, 2, 1048578, 8, 65534, 1048578, 8, 65535, 1048578, 8, 0, 1048578, 8, 1, 1048578, 8, 2, 1048578, 65524, 2, 1048578, 65525, 2, 1048578, 65526, 2, 1048578, 65527, 2, 1048578, 65528, 2, 1048578, 65529, 2, 1048578, 65530, 2, 1048578, 65531, 3, 1048578, 65535, 3, 1048578, 4, 3, 1048578, 0, 3, 1048578, 65532, 3, 1048579)
+}
+
+[node name="EnemyPathGD" type="Path3D" parent="." node_paths=PackedStringArray("difficulty_manager", "victory_layer")]
+curve = SubResource("Curve3D_5noyr")
+script = ExtResource("3_bkjxj")
+enemy_scene = ExtResource("2_7tx4d")
+difficulty_manager = NodePath("../DifficultyManager")
+victory_layer = NodePath("../VictoryLayer")
+
+[node name="Road" type="CSGPolygon3D" parent="EnemyPathGD"]
+polygon = PackedVector2Array(-1, 0, -1, 0.1, 1, 0.1, 1, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.5
+path_simplify_angle = 0.0
+path_rotation = 2
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = SubResource("StandardMaterial3D_eow18")
+
+[node name="Right Edge" type="CSGPolygon3D" parent="EnemyPathGD"]
+polygon = PackedVector2Array(0.9, 0, 0.9, 0.3, 1.1, 0.3, 1.1, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.5
+path_simplify_angle = 0.0
+path_rotation = 2
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+
+[node name="Left Edge" type="CSGPolygon3D" parent="EnemyPathGD"]
+polygon = PackedVector2Array(-1.1, 0, -1.1, 0.3, -0.9, 0.3, -0.9, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 0.5
+path_simplify_angle = 0.0
+path_rotation = 2
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+
+[node name="Timer" type="Timer" parent="EnemyPathGD"]
+wait_time = 2.0
+autostart = true
+
+[node name="Base" parent="." instance=ExtResource("3_5hpag")]
+max_health = 50
+
+[node name="TurretManager" type="Node3D" parent="." node_paths=PackedStringArray("enemy_path")]
+script = ExtResource("5_sl6rl")
+turret = ExtResource("6_x2ekm")
+enemy_path = NodePath("../EnemyPathGD")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+
+[node name="Bank" type="MarginContainer" parent="." groups=["Bank"]]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("8_w0je5")
+
+[node name="GoldLabel" type="Label" parent="Bank"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Placeholder"
+label_settings = SubResource("LabelSettings_iuxcv")
+
+[node name="DifficultyManager" parent="." instance=ExtResource("9_bc6st")]
+spawn_time_curve = SubResource("Curve_70e6r")
+enemy_health_curve = SubResource("Curve_da533")
+
+[node name="VictoryLayer" parent="." instance=ExtResource("10_troqm")]
+visible = false
+
+[connection signal="timeout" from="EnemyPathGD/Timer" to="EnemyPathGD" method="spawn_enemies"]
+[connection signal="stop_spawning_enemies" from="DifficultyManager" to="EnemyPathGD" method="_on_stop_spawning_enemies"]

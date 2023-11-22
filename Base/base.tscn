@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://clkm3bqaflhgo"]
+
+[ext_resource type="Script" path="res://Base/base.gd" id="1_am6mi"]
+[ext_resource type="PackedScene" uid="uid://c0t1edqkyx21d" path="res://assets/Castle Meshes/Base.glb" id="2_2cwfm"]
+
+[node name="Base" type="Node3D" groups=["Base"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -10)
+script = ExtResource("1_am6mi")
+
+[node name="Health" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
+billboard = 1
+text = "This is the starting health."
+font_size = 500
+outline_size = 100
+
+[node name="Base" parent="." instance=ExtResource("2_2cwfm")]
